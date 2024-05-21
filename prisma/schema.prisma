@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+}
+
+// define all the data model
+enum ListingType {
+  SALE
+  RENT
+}
+
+model Property {
+  id  Int @id @default(autoincrement())
+  listingType ListingType
+  projectName String
+  shortTitle  String
+  price Float
+  bedrooms  Int
+  area  Float
+  shortDescription  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  galleries Gallery[]
+}
+
+model Gallery {
+  id  Int @id @default(autoincrement())
+  imageUrl  String
+  propertyId  Int
+  property  Property  @relation(fields: [propertyId], references: [id])
+}
+

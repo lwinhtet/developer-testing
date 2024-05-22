@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: real_estate
-      MYSQL_USER: lwinht
+      MYSQL_USER: root
       MYSQL_PASSWORD: password
     ports:
       - '3306:3306'
@@ -14,11 +14,11 @@ services:
       - mysql_data:/var/lib/mysql
 
   nextjs:
-    image: node:18
+    build: .
+    container_name: nextjs
     working_dir: /app
     volumes:
       - .:/app
-    command: sh -c "npm install && npm run dev"
     ports:
       - '3000:3000'
     depends_on:

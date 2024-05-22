@@ -1,13 +1,26 @@
 'use client';
 
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client';
 import React from 'react';
+import { getClient } from '../graphql/getClient';
 
+// const cache = new InMemoryCache({
+//   typePolicies: {
+//     Query: {
+//       fields: {
+//         properties: offsetLimitPagination(),
+//       },
+//     },
+//   },
+// });
+
+// export const client = new ApolloClient({
+//   uri: 'http://localhost:3000/api/graphql',
+//   cache,
+// });
+
+const client = getClient();
 const Provider = ({ children }: { children: React.ReactNode }) => {
-  const client = new ApolloClient({
-    uri: 'http://localhost:3000/api/graphql',
-    cache: new InMemoryCache(),
-  });
   return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
 

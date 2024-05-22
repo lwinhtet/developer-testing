@@ -41,21 +41,20 @@ const PropertyList = ({ initialProperties }: PropsType) => {
 
   if (loading && !properties.length) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
-  console.log(`data count ${properties?.length}`);
-
+  console.log(data?.length);
   return (
-    <div>
-      {properties.map((property, index) => {
-        return (
+    <main>
+      <div>Hi</div>
+      <div>
+        {properties.map((property, index) => (
           <PropertyItem
             property={property}
-            key={index}
+            key={property.id}
             ref={properties.length === index + 1 ? ref : null}
           />
-        );
-      })}
-    </div>
+        ))}
+      </div>
+    </main>
   );
 };
 

@@ -15,8 +15,6 @@ This project is a real estate property search feature built using Next.js, MySQL
   - Area
 - **Query String Parsing**: Allows for dynamic filtering based on the URL query parameters.
 - **Image Gallery**: Supports mouse interaction on PCs and swipe gestures on mobile devices.
-- **High Performance**: Designed to achieve a score of 95 or higher on Google Insight.
-- **Handles Large Datasets**: Efficiently handles searches on large datasets (10,000, 100,000, and 1,000,000 properties).
 
 ## Setup
 

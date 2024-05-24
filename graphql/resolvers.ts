@@ -7,22 +7,17 @@ export const resolvers = {
         listingType,
         minPrice,
         maxPrice,
-        minBedrooms,
-        maxBedrooms,
+        bedrooms,
         minArea,
         maxArea,
         offset,
         limit,
       } = args;
       const filters: any = {};
-
       if (listingType) filters.listingType = listingType;
       if (minPrice) filters.price = { ...filters.price, gte: minPrice };
       if (maxPrice) filters.price = { ...filters.price, lte: maxPrice };
-      if (minBedrooms)
-        filters.bedrooms = { ...filters.bedrooms, gte: minBedrooms };
-      if (maxBedrooms)
-        filters.bedrooms = { ...filters.bedrooms, lte: maxBedrooms };
+      if (bedrooms) filters.bedrooms = { ...filters.bedrooms, gte: bedrooms };
       if (minArea) filters.area = { ...filters.area, gte: minArea };
       if (maxArea) filters.area = { ...filters.area, lte: maxArea };
 

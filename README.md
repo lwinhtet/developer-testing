@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Real Estate Property Search Feature
 
-## Getting Started
+## Overview
 
-First, run the development server:
+This project is a real estate property search feature built using Next.js, MySQL, and GraphQL. The application allows users to filter properties based on sale or rent, price range, number of bedrooms, and area. It is designed to handle a large number of properties (10,000, 100,000, and 1,000,000) to test query performance. The listing page displays the project name, short title, price, bedroom count, area, short description, and an image gallery that works with both mouse interactions on PCs and swipe gestures on mobile devices. The goal is to achieve a score of 95 or higher on Google Insight.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Static Site Generation (SSG) with revalidation**: Ensures a fast initial load for users by pre-rendering pages at build time and revalidating them as needed.
+- **Divided Data Load**: Separates data for sale and rent properties to optimize performance.
+- **Search Functionality**: Users can filter properties based on:
+  - Sale or Rent
+  - Price Range
+  - Number of Bedrooms
+  - Area
+- **Query String Parsing**: Allows for dynamic filtering based on the URL query parameters.
+- **Image Gallery**: Supports mouse interaction on PCs and swipe gestures on mobile devices.
+- **High Performance**: Designed to achieve a score of 95 or higher on Google Insight.
+- **Handles Large Datasets**: Efficiently handles searches on large datasets (10,000, 100,000, and 1,000,000 properties).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Prerequisites
 
-## Learn More
+- Node.js
+- Docker
+- Docker Compose
+- MySQL
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```sh
+   git clone https://github.com/FazWaz/developer-testing.git
+   cd real-estate-search
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```sh
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. **Set up environment variables:**
+   Create a `.env` file in the root directory and add the following:
+
+   ```env
+   DATABASE_URL=mysql://root:password@mysql:3306/real_estate
+   NEXT_PUBLIC_GRAPHQL_ENDPOINT=http://localhost:3000/api/graphql
+   ```
+
+4. **Run the application:**
+
+   ```sh
+   docker-compose up --build
+   ```
+
+5. **Generate fake data:**
+   Create a script to generate fake data and run it:
+   ```sh
+   npx prisma db seed -- --count 10000
+   ```

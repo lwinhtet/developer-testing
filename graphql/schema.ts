@@ -23,8 +23,7 @@ export const typeDefs = gql`
       listingType: String
       minPrice: Float
       maxPrice: Float
-      minBedrooms: Int
-      maxBedrooms: Int
+      bedrooms: Int
       minArea: Float
       maxArea: Float
       offset: Int

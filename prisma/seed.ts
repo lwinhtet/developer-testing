@@ -33,7 +33,7 @@ async function main() {
     price: faker.number.int({ min: 50000, max: 1500000 }),
     bedrooms: faker.number.int({ min: 1, max: 5 }),
     area: faker.number.int({ min: 500, max: 5000 }),
-    shortDescription: faker.lorem.sentence(),
+    shortDescription: faker.lorem.sentence({ min: 15, max: 18 }),
     galleries: {
       create: Array.from({ length: 5 }).map(() => ({
         imageUrl: faker.image.urlLoremFlickr({ category: 'city' }),

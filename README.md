@@ -30,8 +30,8 @@ This project is a real estate property search feature built using Next.js, MySQL
 1. **Clone the repository:**
 
    ```sh
-   git clone https://github.com/FazWaz/developer-testing.git
-   cd real-estate-search
+   git clone https://github.com/lwinhtet/developer-testing.git
+   cd developer-testing
    ```
 
 2. **Install dependencies:**

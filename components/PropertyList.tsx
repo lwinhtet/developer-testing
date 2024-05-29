@@ -1,7 +1,7 @@
 'use client';
 import { useQuery } from '@apollo/client';
 import { GET_PROPERTIES } from '../graphql/queries';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { iProperty } from '../utils/interface';
 import PropertyItem from './PropertyItem';
@@ -9,7 +9,7 @@ import { ListingType } from '@prisma/client';
 import useFilter from '../hooks/useFilter';
 import { Box, Container } from '@mui/material';
 import Filter from './Filter';
-import { PAGE_SIZE } from '../utils/helper';
+import { PAGE_SIZE } from '../utils/constants';
 import CenteredText from './CenteredText';
 
 type PropsType = {
@@ -26,19 +26,33 @@ const PropertyList = ({
     threshold: 0.1,
     triggerOnce: false,
   });
+  const [hasFetched, setHasFetched] = useState(false);
 
-  const variables: { [key: string]: any } = {
-    listingType,
-    offset: 0,
-    limit: PAGE_SIZE,
-    ...Object.fromEntries(
-      Object.entries(filters).filter(([key, value]) => value !== '')
-    ),
-  };
+  const variables = useMemo(() => {
+    return {
+      listingType,
+      offset: 0,
+      limit: PAGE_SIZE,
+      ...Object.fromEntries(
+        Object.entries(filters).filter(([, value]) => value !== '')
+      ),
+    };
+  }, [listingType, filters]);
 
-  const { loading, error, data, fetchMore } = useQuery(GET_PROPERTIES, {
-    variables,
-  });
+  const { loading, error, data, fetchMore, refetch } = useQuery(
+    GET_PROPERTIES,
+    {
+      variables,
+    }
+  );
+
+  useEffect(() => {
+    if (hasFetched) {
+      refetch(variables);
+    } else {
+      setHasFetched(true);
+    }
+  }, [hasFetched, listingType, refetch, variables]);
 
   useEffect(() => {
     if (inView && !loading && !error) {
@@ -58,16 +72,10 @@ const PropertyList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView, loading, error, fetchMore]);
 
-  // let properties: iProperty[] = loading
-  //   ? initialProperties
-  //   : data?.properties ?? initialProperties;
   let properties: iProperty[] = [];
   if (loading && isFiltered()) {
-    console.log(888);
     return <CenteredText text="Loading..." />;
   } else if (loading && !isFiltered()) {
-    console.log(999);
-    console.log(loading);
     properties = initialProperties;
   } else {
     properties = data?.properties;
@@ -75,9 +83,6 @@ const PropertyList = ({
 
   if (loading && !properties?.length) return <CenteredText text="Loading..." />;
   if (error) return <p>Error: {error.message}</p>;
-
-  // console.log(`data count ${data?.properties.length}`, data);
-  // console.log(`properties count ${properties?.length}`, properties);
 
   return (
     <Container>
@@ -89,7 +94,7 @@ const PropertyList = ({
           listingType={listingType}
         />
       </Box>
-      {!loading && properties.length === 0 ? (
+      {!loading && (!properties || properties.length === 0) ? (
         <CenteredText text="No Property Found!!!" />
       ) : (
         <Box display="flex" flexDirection="column" gap={2} mt={2}>

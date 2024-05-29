@@ -54,8 +54,14 @@ This project is a real estate property search feature built using Next.js, MySQL
    docker-compose up --build
    ```
 
-5. **Generate fake data:**
-   Create a script to generate fake data and run it:
+5. **Create Tables:**
+
    ```sh
-   npx prisma db seed -- --count 10000
+   docker-compose exec nextjs npx prisma migrate dev
+   ```
+
+6. **Generate fake data:**
+   Create a script to generate fake data with count(10000) and run it:
+   ```sh
+   docker-compose exec nextjs npx prisma db seed -- --count 10000
    ```

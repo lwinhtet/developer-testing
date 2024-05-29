@@ -16,7 +16,7 @@ import { FilterState } from '../hooks/useFilter';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { GET_PROPERTIES } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
-import { PAGE_SIZE } from '../utils/helper';
+import { PAGE_SIZE } from '../utils/constants';
 import { ListingType } from '@prisma/client';
 import Link from 'next/link';
 

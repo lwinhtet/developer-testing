@@ -9,10 +9,10 @@
 
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
-import { prisma } from '../../prisma/db';
+import { prisma } from '../../../prisma/db';
 import { PrismaClient } from '@prisma/client';
-import { typeDefs } from '../../graphql/schema';
-import { resolvers } from '../../graphql/resolvers';
+import { typeDefs } from '../../../graphql/schema';
+import { resolvers } from '../../../graphql/resolvers';
 
 export type Context = {
   prisma: PrismaClient;

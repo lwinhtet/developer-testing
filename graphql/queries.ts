@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GET_PROPERTIES_QUERY = `
 query GetProperties(
-  $listingType: String
+  $listingType: String!
   $minPrice: Float
   $maxPrice: Float
   $bedrooms: Int

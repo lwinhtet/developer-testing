@@ -7,14 +7,15 @@ export type FilterState = {
   bedrooms: number;
   minArea: number | '';
   maxArea: number | '';
+  [key: string]: any;
 };
 
 const initialFilterState: FilterState = {
   minPrice: 0,
   maxPrice: 0,
   bedrooms: 0,
-  minArea: 0,
-  maxArea: 0,
+  minArea: '',
+  maxArea: '',
 };
 
 const useFilter = () => {
@@ -40,13 +41,6 @@ const useFilter = () => {
   };
 
   const isFiltered = () => {
-    // return (
-    //   filters.minPrice > 0 ||
-    //   filters.maxPrice > 0 ||
-    //   (filters.minArea !== '' && filters.minArea > 0) ||
-    //   (filters.maxArea !== '' && filters.maxArea > 0) ||
-    //   filters.bedrooms !== 0
-    // );
     return searchParams && searchParams.size > 0;
   };
 
@@ -54,11 +48,19 @@ const useFilter = () => {
     setFilters(initialFilterState);
   };
 
+  const filterVariables = () => {
+    return Object.fromEntries(
+      Object.entries(filters).filter(([key, value]) => value !== '')
+    );
+  };
+
   return {
     filters,
     setFilter,
     resetFilters,
     isFiltered,
+    initialFilterState,
+    filterVariables,
   };
 };
 

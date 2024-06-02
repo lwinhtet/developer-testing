@@ -11,7 +11,7 @@ export const getClient = () => {
       typePolicies: {
         Query: {
           fields: {
-            properties: offsetLimitPagination(),
+            properties: offsetLimitPagination(['listingType']),
           },
         },
       },

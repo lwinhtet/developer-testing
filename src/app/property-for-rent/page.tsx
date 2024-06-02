@@ -1,53 +1,40 @@
-import React from 'react';
-import { GET_PROPERTIES_QUERY } from '../../../graphql/queries';
 import { iProperty } from '../../../utils/interface';
 import PropertyList from '../../../components/PropertyList';
 import { ListingType } from '@prisma/client';
 import { Suspense } from 'react';
-import { PAGE_SIZE } from '../../../utils/constants';
+import { Box, Container } from '@mui/material';
+import Filter from '../../../components/Filter';
+import { getPropertiesData } from '../../../utils/services';
+import CenteredText from '../../../components/CenteredText';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Property For Rent',
+  description:
+    'Find properties for rent with our wide selection. Browse now for the best deals!"',
+};
 
 type PropsType = {
   properties: iProperty[];
 };
 
-const getRentPropertiesData = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/api/graphql', {
-      method: 'POST',
-      next: { revalidate: 5 },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: `${GET_PROPERTIES_QUERY}`,
-        variables: {
-          listingType: ListingType.RENT,
-          offset: 0,
-          limit: PAGE_SIZE,
-        },
-      }),
-    });
-    console.log(4321);
-    const { data } = await response.json();
-
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const PropertyRent = async () => {
-  const data: PropsType = await getRentPropertiesData();
+  const data: PropsType = await getPropertiesData(ListingType.RENT);
   const properties = data?.properties || [];
+
   return (
-    <main>
-      <Suspense>
+    <Container>
+      <Box my={4}>
+        <Filter listingType={ListingType.RENT} />
+      </Box>
+      <Suspense fallback={<CenteredText text="Loading..." />}>
         <PropertyList
+          key={ListingType.RENT}
           initialProperties={properties}
           listingType={ListingType.RENT}
         />
       </Suspense>
-    </main>
+    </Container>
   );
 };
 

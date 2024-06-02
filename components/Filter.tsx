@@ -1,3 +1,4 @@
+'use client';
 import React, { ChangeEvent, FocusEvent, useCallback, useState } from 'react';
 import {
   Card,
@@ -12,7 +13,7 @@ import {
   SelectChangeEvent,
   ButtonGroup,
 } from '@mui/material';
-import { FilterState } from '../hooks/useFilter';
+import useFilter, { FilterState } from '../hooks/useFilter';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { GET_PROPERTIES } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
@@ -50,21 +51,15 @@ const bedroomOptions = [
 ];
 
 type FilterProps = {
-  filters: FilterState;
-  setFilter: (name: keyof FilterState, value: number | '') => void;
-  resetFilters: () => void;
   listingType: ListingType;
 };
 
-const Filter: React.FC<FilterProps> = ({
-  filters,
-  setFilter,
-  resetFilters,
-  listingType,
-}) => {
+const Filter: React.FC<FilterProps> = ({ listingType }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { filters, setFilter, resetFilters, isFiltered, initialFilterState } =
+    useFilter();
   const [currentListingType] = useState<ListingType>(listingType);
 
   const { refetch } = useQuery(GET_PROPERTIES, { skip: true });
@@ -83,21 +78,25 @@ const Filter: React.FC<FilterProps> = ({
     [searchParams]
   );
 
-  const construstVariables = (name: string, value: string | number) => {
+  const filteredVariables = (current: FilterState) => {
+    return Object.fromEntries(
+      Object.entries(current).filter(([key, value]) => value !== '')
+    );
+  };
+
+  const constructVariables = (name: string, value: string | number) => {
     const current = {
       ...filters,
       [name]: value,
     };
-    return Object.fromEntries(
-      Object.entries(current).filter(([key, value]) => value !== '')
-    );
+    return filteredVariables(current);
   };
 
   const handlePriceRange = (event: SelectChangeEvent<number>) => {
     const { name, value } = event.target;
     setFilter(name as keyof FilterState, parseInt(value as string));
     router.push(pathname + '?' + createQueryString(name, value as string));
-    const variables = construstVariables(name, value);
+    const variables = constructVariables(name, value);
     refetch({
       listingType,
       offset: 0,
@@ -119,9 +118,7 @@ const Filter: React.FC<FilterProps> = ({
   const handleAreaRangeOnBlur = (event: FocusEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     router.push(pathname + '?' + createQueryString(name, value as string));
-    const variables = Object.fromEntries(
-      Object.entries(filters).filter(([key, value]) => value !== '')
-    );
+    const variables = filteredVariables(filters);
 
     refetch({
       listingType,
@@ -136,7 +133,7 @@ const Filter: React.FC<FilterProps> = ({
 
     setFilter(name as keyof FilterState, parseInt(value as string));
     router.push(pathname + '?' + createQueryString(name, value as string));
-    const variables = construstVariables(name, value);
+    const variables = constructVariables(name, value);
 
     refetch({
       listingType,
@@ -144,6 +141,20 @@ const Filter: React.FC<FilterProps> = ({
       limit: PAGE_SIZE,
       ...variables,
     });
+  };
+
+  const handleReset = () => {
+    if (isFiltered()) {
+      resetFilters();
+      router.push(pathname!);
+      const variables = filteredVariables(initialFilterState);
+      refetch({
+        listingType,
+        offset: 0,
+        limit: PAGE_SIZE,
+        ...variables,
+      });
+    }
   };
 
   return (
@@ -272,7 +283,7 @@ const Filter: React.FC<FilterProps> = ({
             variant="outlined"
             sx={{ minWidth: 150 }}
           />
-          <Button variant="contained" color="primary" onClick={resetFilters}>
+          <Button variant="contained" color="primary" onClick={handleReset}>
             Reset Filters
           </Button>
         </Box>

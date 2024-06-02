@@ -13,6 +13,12 @@ RUN npm install
 # Copy the rest of the application code to the container
 COPY . .
 
+# Generate the Prisma Client
+RUN npx prisma generate
+
+# Build the Next.js application
+RUN npm run build
+
 # Expose port 3000 to the host
 EXPOSE 3000
 

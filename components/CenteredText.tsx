@@ -11,7 +11,7 @@ const CenteredText = ({ text }: Proptype) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
+        height: '100%',
       }}
     >
       <Typography variant="h6" align="center">

@@ -25,8 +25,8 @@ const ImageSlider = ({ images }: PropType) => {
   const handlers = useSwipeable({
     onSwipedLeft: handleNext,
     onSwipedRight: handlePrevious,
-    // preventDefaultTouchmoveEvent: true,
     trackMouse: true,
+    preventScrollOnSwipe: true,
   });
 
   return (
@@ -34,24 +34,44 @@ const ImageSlider = ({ images }: PropType) => {
       {...handlers}
       sx={{ position: 'relative', width: '100%', height: '100%' }}
     >
-      <Box
-        sx={{
-          position: 'relative',
-          width: '70vw', // Set the initial width to 70% of the viewport width
-          maxWidth: 700, // Set the maximum width to 700px
-          margin: '0 auto', // Center the box horizontally
-          overflow: 'hidden', // Ensure the box doesn't exceed the specified width
-        }}
-      >
-        <Image
-          src={images[currentIndex].imageUrl}
-          alt={`Slide ${currentIndex + 1}`}
-          width={700} // Set the width of the image to 700px
-          height={400} // Set a default height for optimal loading
-          layout="responsive" // Make the image responsive
-          objectFit="cover"
-        />
-      </Box>
+      {images.map((image, index) => (
+        <Box
+          key={index}
+          sx={{
+            width: index === currentIndex ? '70vw' : 0,
+            height: index === currentIndex ? '50vh' : 0,
+            maxWidth: 700,
+            margin: '0 auto',
+            overflow: 'hidden',
+            visibility: index === currentIndex ? 'visible' : 'hidden',
+          }}
+        >
+          <Image
+            src={image.imageUrl}
+            alt={`Slide ${index + 1}`}
+            fill
+            style={{ objectFit: 'cover' }}
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            objectFit="cover"
+          />
+          <Typography
+            variant="subtitle1"
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '100%',
+              textAlign: 'center',
+              background: 'rgba(0, 0, 0, 0.5)',
+              color: 'white',
+              padding: '8px',
+            }}
+          >
+            Image {currentIndex + 1}
+          </Typography>
+        </Box>
+      ))}
       <IconButton
         onClick={handlePrevious}
         sx={{
